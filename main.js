@@ -31,8 +31,9 @@ renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
 const aspect = 2; // the canvas default
 const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+camera.position.x = 200;
 camera.position.y = 5;
-camera.position.z = 30;
+camera.position.z = 60;
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 var controls = new THREE.TrackballControls(camera, canvas);
@@ -76,14 +77,71 @@ scene.background = new THREE.Color(0x999999);
     // scene.add(light3);
 }
 
+const loader = new THREE.TextureLoader();
+
+// стены
+{
+    const room_geometry = new THREE.BoxGeometry(500, 120, 300);
+    // Для новых версий ThreeJS
+    const room_material = new THREE.MeshBasicMaterial({
+        map: loader.load('tex/wood-table.jpg'),
+        side: THREE.DoubleSide
+    });
+
+    var room = new THREE.Mesh(room_geometry, room_material);
+    room.position.y = 19.9;
+    room.position.z = 70;
+    //room.castShadow = true;
+    room.receiveShadow = true;
+    scene.add(room);
+}
+
+// пол
+{
+    const flor_geometry = new THREE.PlaneGeometry(500, 300);
+    const texture = loader.load( 'tex/Tiles074_1K-JPG/Tiles074_1K_Color.jpg' );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(6,3);
+    const flor_material = new THREE.MeshBasicMaterial({
+        map: texture,
+        side: THREE.DoubleSide
+    });
+    
+    const plane = new THREE.Mesh(flor_geometry, flor_material);
+    plane.rotation.x = Math.PI/2;
+    plane.position.y = -40;
+    plane.position.z = 70;
+    scene.add(plane);
+}
+
+// потолок
+{
+    const roof_geometry = new THREE.PlaneGeometry(500, 300);
+    const texture = loader.load( 'tex/Planks023A_1K-JPG/Planks023A_1K_Color.jpg' );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(16,8);
+    const roof_material = new THREE.MeshBasicMaterial({
+        map: texture,
+        side: THREE.DoubleSide
+    });
+    
+    const roof = new THREE.Mesh(roof_geometry, roof_material);
+    roof.rotation.x = Math.PI/2;
+    roof.position.y = 79.8;
+    roof.position.z = 70;
+    scene.add(roof);
+}
+
 
 // стол
 var table; {
     const table_geometry = new THREE.BoxGeometry(50, 30, 30);
     // Для новых версий ThreeJS
-    const loader = new THREE.TextureLoader();
     const table_material = new THREE.MeshBasicMaterial({
         map: loader.load('tex/wood-table.jpg'),
+        side: THREE.DoubleSide
     });
 
     // Загрузка текстур для старых версий ThreeJS
