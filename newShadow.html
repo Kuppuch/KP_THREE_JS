@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="three.js"></script>
+    <script src="old/TrackballControls.js"></script>
+</head>
+
+<body>
+    <canvas id="c" width="1240" height="870"></canvas>
+    <script>
+        var Key = {
+            _pressed: {},
+
+            A: 65,
+            W: 87,
+            D: 68,
+            S: 83,
+            SPACE: 32,
+            Ctrl: 17,
+
+            isDown: function (keyCode) {
+                return this._pressed[keyCode];
+            },
+            onKeydown: function (event) {
+                this._pressed[event.keyCode] = true;
+            },
+            onKeyup: function (event) {
+                delete this._pressed[event.keyCode];
+            }
+        }
+
+        const canvas = document.querySelector('#c');
+        const renderer = new THREE.WebGLRenderer({
+            canvas
+        });
+        renderer.shadowMapEnabled = true;
+
+
+
+        const aspect = 2; // the canvas default
+        const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 10000);
+        camera.position.y = 20;
+        camera.position.z = 70;
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        var controls = new THREE.TrackballControls(camera, canvas);
+        controls.rotateSpeed = 2;
+        controls.noZoom = false;
+        controls.zoomSpeed = 1.2;
+        controls.staticMoving = true;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color( 0x999999 );
+
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(-2, 1, 2); //default; light shining from top
+        light.castShadow = true; // default false
+        scene.add(light);
+
+        light.shadow.mapSize.width = 512; // default
+        light.shadow.mapSize.height = 512; // default
+        light.shadow.camera.near = 0.5; // defaults
+        light.shadow.camera.far = 500; // default
+
+        // light2 = new THREE.DirectionalLight(0xffffff);
+        // light2.position.set(0, -100, 0);
+        // // light2.castShadow = true;
+        // scene.add(light2);
+
+
+
+        // const sphereGeometry = new THREE.SphereGeometry(5, 32, 32);
+        // const sphereMaterial = new THREE.MeshStandardMaterial({
+        //     color: 0xff0000
+        // });
+        // const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        // sphere.castShadow = true; //default is false
+        // sphere.receiveShadow = false; //default
+        // scene.add(sphere);
+
+
+        const geometry = new THREE.BufferGeometry();
+
+        const vertices = new Float32Array([
+            // левая грань
+            -10, -10, -10,
+            -10, 10,-10,
+            -10, 10, 0,
+
+            -10, -10, -10,
+            -10, -10, 0,
+            -10, 10, 0,
+
+            -10, -10, 0,
+            -10, -10, 5,
+            -10, -7, 5,
+
+            -10, -10, 0,
+            -10, -7, 0,
+            -10, -7, 5,
+
+            -10, 10, 0,
+            -10, 10, 5,
+            -10, 5, 0,
+
+            -10, 5, 0,
+            -10, 5, 5,
+            -10, 10, 5,
+
+            // правая грань
+            10, -10, -10,
+            10, 10,-10,
+            10, 10, 0,
+
+            10, -10, -10,
+            10, -10, 0,
+            10, 10, 0,
+
+            10, -10, 0,
+            10, -10, 5,
+            10, -7, 5,
+
+            10, -10, 0,
+            10, -7, 0,
+            10, -7, 5,
+
+            10, 10, 0,
+            10, 10, 5,
+            10, 5, 0,
+
+            10, 5, 0,
+            10, 5, 5,
+            10, 10, 5,
+
+            // передняя грань
+            // низ
+            -10, -10, 5,
+            10, -10, 5,
+            10, -7, 5,
+
+            -10, -10, 5,
+            -10, -7, 5,
+            10, -7, 5,
+
+            // верх
+            -10, 10, 5,
+            10, 10, 5,
+            10, 5, 5,
+
+            -10, 10, 5,
+            -10, 5, 5,
+            10, 5, 5,
+
+            //центр
+            -10, 5, 0,
+            10, 5, 0,
+            10, -7, 0,
+
+            -10, 5, 0,
+            -10, -7, 0,
+            10, -7, 0,
+
+            // вехняя планка
+            -10, 5, 0,
+            -10, 5, 5,
+            10, 5, 0,
+
+            10, 5, 0,
+            10, 5, 5,
+            -10, 5, 5,
+
+            // нижняя планка
+            -10, -7, 0,
+            -10, -7, 5,
+            10, -7, 0,
+
+            10, -7, 0,
+            10, -7, 5,
+            -10, -7, 5,
+
+            // зад
+            -10, -10, -10,
+            10, -10, -10,
+            10, 10, -10,
+
+            -10, -10, -10,
+            -10, 10, -10,
+            10, 10, -10,
+
+
+            // крышка
+            -10, 10, -10,
+            -10, 10, 5,
+            10, 10, 5,
+
+            -10, 10, -10,
+            10, 10, -10,
+            10, 10, 5,
+
+            // дно
+            -10, -10, -10,
+            -10, -10, 5,
+            10, -10, 5,
+
+            -10, -10, -10,
+            10, -10, -10,
+            10, -10, 5,
+
+        ]);
+
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        geometry.computeVertexNormals();
+
+
+        const helper = new THREE.CameraHelper(light.shadow.camera);
+        scene.add(helper);
+
+        
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xff0000,
+            side: THREE.DoubleSide
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        //mesh.receiveShadow = true;
+        scene.add(mesh);
+
+        function dynamo() {
+            if (Key.isDown(Key.A)) // движение влево
+            {
+                light.position.x -= 0.1;
+            }
+            if (Key.isDown(Key.D)) // движение вправо
+            {
+                light.position.x += 0.1;
+            }
+            if (Key.isDown(Key.W)) // движение вперёд
+            {
+                light.position.z -= 0.1;
+            }
+            if (Key.isDown(Key.S)) // движение назад
+            {
+                light.position.z += 0.1;
+            }
+            if (Key.isDown(Key.SPACE)) // подскок
+            {
+                light.position.y += 0.1;
+            }
+            if (Key.isDown(Key.Ctrl)) // подскок
+            {
+                light.position.y -= 0.1;
+            }
+        }
+
+
+        function render(time) {
+            time *= 0.001;
+            dynamo();
+            controls.update();
+
+            renderer.render(scene, camera);
+
+            requestAnimationFrame(render);
+        }
+
+        requestAnimationFrame(render);
+
+        window.addEventListener('keyup', function (event) {
+                Key.onKeyup(event);
+            },
+            false
+        );
+
+        window.addEventListener('keydown', function (event) {
+                Key.onKeydown(event);
+            },
+            false
+        );
+    </script>
+</body>
+
+</html>

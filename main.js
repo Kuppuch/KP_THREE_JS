@@ -25,13 +25,14 @@ const renderer = new THREE.WebGLRenderer({
     canvas
 });
 renderer.shadowMapEnabled = true;
+renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
 
 
 const aspect = 2; // the canvas default
-const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100);
-camera.position.y = 1;
-camera.position.z = 5;
+const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+camera.position.y = 5;
+camera.position.z = 30;
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 var controls = new THREE.TrackballControls(camera, canvas);
@@ -43,186 +44,253 @@ controls.staticMoving = true;
 
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x999999);
 
 // свет
 {
     const color = 0xFFFFFF;
     const intensity = 1;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(-1, 2, 4);
+    var light = new THREE.DirectionalLight(color);
+    light.position.set(-50, 10, 50);
     light.castShadow = true;
     scene.add(light);
 
-    const light2 = new THREE.DirectionalLight(color, intensity);
-    light2.position.set(1, 2, -4);
-    light2.castShadow = true;
-    scene.add(light2);
+    light.shadowMapSizeWidth = 512; // default
+    light.shadowMapSizeHeight = 512; // default
+    light.shadowCameraNear = 0.5; // default
+    light.shadowCameraFar = 500; // default
 
-    const light3 = new THREE.DirectionalLight(color, intensity);
-    light3.position.set(1, -2, 4);
-    light3.castShadow = true;
-    scene.add(light3);
+    // light = new THREE.DirectionalLight(0xffffff);
+    // light.position.set(0, 100, 0);
+    // light.castShadow = true;
+    // scene.add(light);
+
+    // const light2 = new THREE.DirectionalLight(color, intensity);
+    // light2.position.set(1, 2, -4);
+    // light2.castShadow = true;
+    // scene.add(light2);
+
+    // const light3 = new THREE.DirectionalLight(color, intensity);
+    // light3.position.set(1, -2, 4);
+    // light3.castShadow = true;
+    // scene.add(light3);
 }
+
 
 // стол
 var table; {
-    const table_geometry = new THREE.BoxGeometry(5, 3, 3);
+    const table_geometry = new THREE.BoxGeometry(50, 30, 30);
     // Для новых версий ThreeJS
-    // const loader = new THREE.TextureLoader();
-    // const table_material = new THREE.MeshBasicMaterial({
-    //     map: loader.load('wood-table.jpg'),
-    // });
+    const loader = new THREE.TextureLoader();
+    const table_material = new THREE.MeshBasicMaterial({
+        map: loader.load('tex/wood-table.jpg'),
+    });
 
     // Загрузка текстур для старых версий ThreeJS
-    var table_material = new THREE.MeshLambertMaterial({
-        map: new THREE.ImageUtils.loadTexture('tex/wood-table.jpg')
-    });
+    // var table_material = new THREE.MeshLambertMaterial({
+    //     map: new THREE.ImageUtils.loadTexture('tex/wood-table.jpg')
+    // });
 
 
     table = new THREE.Mesh(table_geometry, table_material);
-    table.position.y = -2.5;
-    table.castShadow = true;
+    table.position.y = -25;
+    //table.castShadow = true;
     table.receiveShadow = true;
     scene.add(table);
 }
 
 
 // кофемашина
-var cubes = []; {
-    const geometry = new THREE.Geometry();
-    geometry.vertices.push(
+{
+    const geometry = new THREE.BufferGeometry();
 
-        // передняя нижняя панель
-        new THREE.Vector3(-1, -1, 1.5), // 0
-        new THREE.Vector3(-1, -0.75, 1.5), // 1
-        new THREE.Vector3(1, -0.75, 1.5), // 2
-        new THREE.Vector3(1, -1, 1.5), // 3
+    const vertices = new Float32Array([
+        // левая грань
+        -10, -10, -10,
+        -10, 10, -10,
+        -10, 10, 0,
 
-        // задние нижние точки
-        new THREE.Vector3(-1, -1, -1), // 4
-        new THREE.Vector3(1, -1, -1), // 5
+        -10, -10, -10,
+        -10, -10, 0,
+        -10, 10, 0,
 
-        // нижние вспомогательные точки для выемки 
-        new THREE.Vector3(-1, -1, 1), // 6
-        new THREE.Vector3(1, -1, 1), // 7
+        -10, -10, 0,
+        -10, -10, 5,
+        -10, -7, 5,
 
-        new THREE.Vector3(-1, -0.75, 1), // 8
-        new THREE.Vector3(1, -0.75, 1), // 9
+        -10, -10, 0,
+        -10, -7, 0,
+        -10, -7, 5,
 
-        // передняя верхняя панель
-        new THREE.Vector3(-1, 1, 1.5), // 10
-        new THREE.Vector3(1, 1, 1.5), // 11
+        -10, 10, 0,
+        -10, 10, 5,
+        -10, 5, 0,
 
-        new THREE.Vector3(-1, 0.5, 1.5), // 12
-        new THREE.Vector3(1, 0.5, 1.5), // 13
+        -10, 5, 0,
+        -10, 5, 5,
+        -10, 10, 5,
 
-        // задние верхние точки
-        new THREE.Vector3(-1, 1, -1), // 14
-        new THREE.Vector3(1, 1, -1), // 15
+        // правая грань
+        10, -10, -10,
+        10, 10, -10,
+        10, 10, 0,
 
-        //Доп точки верхней панель
-        new THREE.Vector3(-1, 1, 1), // 16
-        new THREE.Vector3(1, 1, 1), // 17
-        new THREE.Vector3(-1, 0.5, 1), // 18
-        new THREE.Vector3(1, 0.5, 1), // 19
+        10, -10, -10,
+        10, -10, 0,
+        10, 10, 0,
 
+        10, -10, 0,
+        10, -10, 5,
+        10, -7, 5,
 
-    );
+        10, -10, 0,
+        10, -7, 0,
+        10, -7, 5,
 
+        10, 10, 0,
+        10, 10, 5,
+        10, 5, 0,
 
-    geometry.faces.push(
+        10, 5, 0,
+        10, 5, 5,
+        10, 10, 5,
 
-        // передняя нижняя панель
-        new THREE.Face3(2, 1, 0),
-        new THREE.Face3(0, 3, 2),
+        // передняя грань
+        // низ
+        -10, -10, 5,
+        10, -10, 5,
+        10, -7, 5,
 
-        //дно
-        new THREE.Face3(5, 0, 4),
-        new THREE.Face3(0, 5, 3),
-        // конец дна
+        -10, -10, 5,
+        -10, -7, 5,
+        10, -7, 5,
 
-        new THREE.Face3(9, 1, 2),
-        new THREE.Face3(9, 8, 1),
+        // верх
+        -10, 10, 5,
+        10, 10, 5,
+        10, 5, 5,
 
-        new THREE.Face3(0, 1, 8),
-        new THREE.Face3(9, 2, 3),
-        new THREE.Face3(8, 6, 0),
-        new THREE.Face3(3, 7, 9),
+        -10, 10, 5,
+        -10, 5, 5,
+        10, 5, 5,
 
-        // Передняя верхняя панель
-        new THREE.Face3(12, 11, 10),
-        new THREE.Face3(12, 13, 11),
+        //центр
+        -10, 5, 0,
+        10, 5, 0,
+        10, -7, 0,
 
-        //между верхней и центральной панель
-        new THREE.Face3(12, 18, 19),
-        new THREE.Face3(19, 13, 12),
+        -10, 5, 0,
+        -10, -7, 0,
+        10, -7, 0,
 
-        // правая верхняя заплатка на выемку
-        new THREE.Face3(11, 13, 19),
-        new THREE.Face3(19, 15, 11),
+        // вехняя планка
+        -10, 5, 0,
+        -10, 5, 5,
+        10, 5, 0,
 
-        // левая верхняя заплатка на выемку
-        new THREE.Face3(10, 16, 18),
-        new THREE.Face3(10, 18, 12),
+        10, 5, 0,
+        10, 5, 5,
+        -10, 5, 5,
 
-        // Передняя центральная панель
-        new THREE.Face3(8, 9, 19),
-        new THREE.Face3(8, 19, 18),
+        // нижняя планка
+        -10, -7, 0,
+        -10, -7, 5,
+        10, -7, 0,
 
-        // крышка
-        new THREE.Face3(15, 14, 10),
-        new THREE.Face3(15, 10, 11),
+        10, -7, 0,
+        10, -7, 5,
+        -10, -7, 5,
 
         // зад
-        new THREE.Face3(4, 14, 15),
-        new THREE.Face3(4, 15, 5),
+        -10, -10, -10,
+        10, -10, -10,
+        10, 10, -10,
+
+        -10, -10, -10,
+        -10, 10, -10,
+        10, 10, -10,
 
 
-        // слева
-        new THREE.Face3(14, 4, 6),
-        new THREE.Face3(6, 16, 14),
+        // крышка
+        -10, 10, -10,
+        -10, 10, 5,
+        10, 10, 5,
 
-        // справа
-        new THREE.Face3(7, 5, 15),
-        new THREE.Face3(15, 17, 7),
+        -10, 10, -10,
+        10, 10, -10,
+        10, 10, 5,
+
+        // дно
+        -10, -10, -10,
+        -10, -10, 5,
+        10, -10, 5,
+
+        -10, -10, -10,
+        10, -10, -10,
+        10, -10, 5,
+
+    ]);
 
 
-    );
 
-    geometry.computeFaceNormals();
+    // itemSize = 3 because there are 3 values (components) per vertex
+    geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geometry.computeVertexNormals();
 
-    function makeInstance(geometry, color, x) {
-        const material = new THREE.MeshLambertMaterial({
-            color
-        });
+    const material = new THREE.MeshLambertMaterial({
+        color: 0x4444FF,
+        side: THREE.DoubleSide
+    });
 
-        const cube = new THREE.Mesh(geometry, material);
-        cube.castShadow = true;
-        cube.receiveShadow = true;
-        scene.add(cube);
+    const cube = new THREE.Mesh(geometry, material);
+    cube.castShadow = true;
+    cube.receiveShadow = true;
+    scene.add(cube);
 
-        cube.position.x = x;
-        return cube;
-    }
 
-    cubes = [
-        makeInstance(geometry, 0x4444FF, 0),
-    ];
 }
 
 // наливайка
 var pourer; {
-    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.3);
-    const material = new THREE.MeshLambertMaterial({
-        color: 0x4444FF
+    const geometry = new THREE.BoxGeometry(5, 5, 3);
+    const material = new THREE.MeshPhysicalMaterial({
+        color: 0xFFFFFF,
+        side: THREE.DoubleSide,
+        roughness: 0,
+        metalness: 1,
+        normalScale: new THREE.Vector2(0, 0),
+        displacementScale: 1
     });
     pourer = new THREE.Mesh(geometry, material);
-    pourer.position.y = 0.3;
-    pourer.position.z = 1.25;
+    pourer.position.y = 3;
+    pourer.position.z = 2;
     pourer.castShadow = true;
     pourer.receiveShadow = true;
     scene.add(pourer);
 }
+
+
+// var planeMaterial1 = new THREE.MeshLambertMaterial({
+//     color: 0x9999ff,
+//     side: THREE.DoubleSide
+// });
+// var planGeo1 = new THREE.PlaneGeometry(20, 20, 1, 1);
+// var plane1 = new THREE.Mesh(planGeo1, planeMaterial1);
+// plane1.rotation.x = Math.PI / 2;
+// // plane1.receiveShadow = true;
+// plane1.castShadow = true;
+// scene.add(plane1);
+
+// var planeMaterial2 = new THREE.MeshLambertMaterial({
+//     color: 0xff00ff,
+//     side: THREE.DoubleSide
+// });
+// var planGeo2 = new THREE.PlaneGeometry(30, 30, 1, 1);
+// var plane2 = new THREE.Mesh(planGeo2, planeMaterial2);
+// plane2.position.set(0, -10, 0);
+// plane2.rotation.x = Math.PI / 2;
+// plane2.receiveShadow = true;
+// scene.add(plane2);
 
 
 function resizeRendererToDisplaySize(renderer) {
@@ -239,27 +307,27 @@ function resizeRendererToDisplaySize(renderer) {
 function dynamo() {
     if (Key.isDown(Key.A)) // движение влево
     {
-        table.position.x -= 0.1;
+        light.position.x -= 0.1;
     }
     if (Key.isDown(Key.D)) // движение вправо
     {
-        table.position.x += 0.1;
+        light.position.x += 0.1;
     }
     if (Key.isDown(Key.W)) // движение вперёд
     {
-        table.position.z -= 0.1;
+        light.position.z -= 0.1;
     }
     if (Key.isDown(Key.S)) // движение назад
     {
-        table.position.z += 0.1;
+        light.position.z += 0.1;
     }
     if (Key.isDown(Key.SPACE)) // подскок
     {
-        table.position.y += 0.1;
+        light.position.y += 0.1;
     }
     if (Key.isDown(Key.Ctrl)) // подскок
     {
-        table.position.y -= 0.1;
+        light.position.y -= 0.1;
     }
 }
 
@@ -271,13 +339,6 @@ function render(time) {
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
     }
-
-    cubes.forEach((cube, ndx) => {
-        const speed = 1 + ndx * .1;
-        const rot = time * speed;
-        // cube.rotation.x = rot;
-        // cube.rotation.x = rot;
-    });
 
     dynamo();
     controls.update();
