@@ -19,8 +19,7 @@ var Key = {
     }
 }
 
-
-const canvas = document.querySelector('#c');
+var canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({
     canvas
 });
@@ -31,9 +30,9 @@ renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
 const aspect = 2; // the canvas default
 const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-camera.position.x = 200;
+camera.position.x = 5;
 camera.position.y = 5;
-camera.position.z = 60;
+camera.position.z = 15;
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 var controls = new THREE.TrackballControls(camera, canvas);
@@ -99,17 +98,17 @@ const loader = new THREE.TextureLoader();
 // пол
 {
     const flor_geometry = new THREE.PlaneGeometry(500, 300);
-    const texture = loader.load( 'tex/Tiles074_1K-JPG/Tiles074_1K_Color.jpg' );
+    const texture = loader.load('tex/Tiles074_1K-JPG/Tiles074_1K_Color.jpg');
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(6,3);
+    texture.repeat.set(6, 3);
     const flor_material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.DoubleSide
     });
-    
+
     const plane = new THREE.Mesh(flor_geometry, flor_material);
-    plane.rotation.x = Math.PI/2;
+    plane.rotation.x = Math.PI / 2;
     plane.position.y = -40;
     plane.position.z = 70;
     scene.add(plane);
@@ -118,17 +117,17 @@ const loader = new THREE.TextureLoader();
 // потолок
 {
     const roof_geometry = new THREE.PlaneGeometry(500, 300);
-    const texture = loader.load( 'tex/Planks023A_1K-JPG/Planks023A_1K_Color.jpg' );
+    const texture = loader.load('tex/Planks023A_1K-JPG/Planks023A_1K_Color.jpg');
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(16,8);
+    texture.repeat.set(16, 8);
     const roof_material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.DoubleSide
     });
-    
+
     const roof = new THREE.Mesh(roof_geometry, roof_material);
-    roof.rotation.x = Math.PI/2;
+    roof.rotation.x = Math.PI / 2;
     roof.position.y = 79.8;
     roof.position.z = 70;
     scene.add(roof);
@@ -310,7 +309,7 @@ var table; {
 
 // наливайка
 var pourer; {
-    const geometry = new THREE.BoxGeometry(5, 5, 3);
+    const geometry = new THREE.BoxGeometry(4, 3, 3);
     const material = new THREE.MeshPhysicalMaterial({
         color: 0xFFFFFF,
         side: THREE.DoubleSide,
@@ -320,12 +319,81 @@ var pourer; {
         displacementScale: 1
     });
     pourer = new THREE.Mesh(geometry, material);
-    pourer.position.y = 3;
+    pourer.position.y = 3.5;
     pourer.position.z = 2;
     pourer.castShadow = true;
     pourer.receiveShadow = true;
     scene.add(pourer);
 }
+
+// фужер
+{
+    glass = new THREE.Object3D;
+    var glass_material = new THREE.MeshPhongMaterial({
+        color: 0xEADAAF,
+        specular: 0xEADAAF,
+        shininess: 50,
+        blending: THREE.NormalBlending,
+        depthTest: true,
+        depthWrite: true,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.7
+    });
+
+    var j = 0;
+    var points = [];
+    for (var i = -2.4; i < 0.7; i = i + 0.1) {
+        j = j + 2;
+        points.push(new THREE.Vector3(1 + 1 * Math.exp(-i * i), 2 * i, 0));
+    }
+
+    var glass_geometry = new THREE.LatheGeometry(points, 32);
+    object = new THREE.Mesh(glass_geometry, glass_material);
+    object.position.set(0, 6.3, 0);
+    glass.add(object);
+
+    var geometry = new THREE.CylinderGeometry(1, 2, 1, 32);
+    var disc1 = new THREE.Mesh(geometry, glass_material);
+    disc1.position.set(0, 1, 0);
+    glass.add(disc1);
+
+    glass.position.set(0, -7.5, 2);
+    scene.add(glass);
+}
+
+// Частицы
+{
+    let rad = 1.88;
+    let deg = 0;
+    var terrainSize = terrain.length;
+    console.log(terrain.length);
+
+    // Создание частиц
+    var geometry = new THREE.SphereGeometry(0.1, 8, 8);
+    var material = new THREE.MeshLambertMaterial({
+        color: 0xffdb8f
+    });
+    for (var i = 0; i < terrainSize; i++) {
+        for (var j = 0; j < terrainSize; j++) {
+            var Psphere = new THREE.Mesh(geometry, material);
+            Psphere.position.x = (i - terrainSize / 4) / 16 + (Math.random() - 0.5) * 8;
+            Psphere.position.y = -1;
+            Psphere.position.z = ((j - terrainSize / 4) / 16 + (Math.random() - 0.5) * 8) + 5;
+            deg++;
+            if (Math.pow(Psphere.position.x - 0, 2) + Math.pow(Psphere.position.z - 2, 2) <= Math.pow(rad, 2)) {
+                scene.add(Psphere);
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
 
 
 // var planeMaterial1 = new THREE.MeshLambertMaterial({
