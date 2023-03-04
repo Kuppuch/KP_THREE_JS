@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KURSACH</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      #canvas {
+        width: calc(100vw - 20px);
+        height: calc(100vh - 60px);
+        display: block;
+      }
+
+      .controls {
+        width: calc(100vw - 20px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="canvas" width="1240" height="870"></canvas>
+      <div class="controls">
+        <button id="pour">Налить кофе</button>
+      </div>
+    </div>
+    <script type="x-shader/x-vertex" id="shader-particle-vertex" src="/src/shaders/particleVertex.glsl"></script>
+    <script type="x-shader/x-fragment" id="shader-particle-fragment" src="/src/shaders/particleFragment.glsl"></script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
