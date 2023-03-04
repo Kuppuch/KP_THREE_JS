@@ -288,6 +288,8 @@ var table; {
 
     ]);
 
+    console.log(vertices);
+
 
 
     // itemSize = 3 because there are 3 values (components) per vertex
