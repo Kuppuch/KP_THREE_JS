@@ -28,10 +28,18 @@ export const ParticleSystem = {
     points: THREE.Points,
 }
 
+let system = ParticleSystem
+
 export class coffeeParticles {
     scene = THREE.Scene
     particlesCount = 500
     scatter = 0.6
+
+    constructor(scene) {
+        this.scene = scene
+    }
+
+    
 
     generatePoints(count, scatter) {
         const positions = []
@@ -90,7 +98,7 @@ export class coffeeParticles {
             points,
         }
 
-        scene.add(points)
+        this.scene.add(points)
     }
 
     destruct() {
@@ -98,10 +106,10 @@ export class coffeeParticles {
             return
         }
 
-        const object = scene.getObjectByName(system.points.name)
+        const object = this.scene.getObjectByName(system.points.name)
 
         if (object) {
-            scene.remove(object)
+            this.scene.remove(object)
         }
 
         system = undefined

@@ -78,7 +78,7 @@ window.onload = (event) => {
 
     const clock = new THREE.Clock()
     let pouringPercent = 0
-    const cp = new coffeeParticles()
+    const cp = new coffeeParticles(scene)
 
     pourButton.addEventListener('click', () => {
         if (!pouringInProcess) {
