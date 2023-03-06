@@ -1,4 +1,5 @@
 function addTable() {
+    const loader = new THREE.TextureLoader()
     const table_geometry = new THREE.BoxGeometry(50, 30, 30);
     // Для новых версий ThreeJS
     const table_material = new THREE.MeshBasicMaterial({

@@ -15,8 +15,7 @@ function addGlass() {
     var j = 0;
     var points = [];
     for (var i = -2.4; i < 0.7; i = i + 0.1) {
-        j = j + 2;
-        points.push(new THREE.Vector3(1 + 1 * Math.exp(-i * i), 2 * i, 0));
+        points.push(getCoffeeGlassPoint(i));
     }
 
     var glass_geometry = new THREE.LatheGeometry(points, 32);
@@ -31,4 +30,8 @@ function addGlass() {
 
     glass.position.set(0, -7.5, 2);
     return glass
+}
+
+function getCoffeeGlassPoint(i) {
+    return new THREE.Vector3(1 + 1 * Math.exp(-i * i), 2 * i, 0)
 }

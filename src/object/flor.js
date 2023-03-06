@@ -1,4 +1,5 @@
 function addFlor() {
+    const loader = new THREE.TextureLoader()
     const flor_geometry = new THREE.PlaneGeometry(500, 300);
     const texture = loader.load('tex/Tiles074_1K-JPG/Tiles074_1K_Color.jpg');
     texture.wrapS = THREE.RepeatWrapping;
@@ -13,6 +14,6 @@ function addFlor() {
     plane.rotation.x = Math.PI / 2;
     plane.position.y = -40;
     plane.position.z = 70;
-    return plane
 
+    return plane
 }  

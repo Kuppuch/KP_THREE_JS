@@ -1,5 +1,5 @@
 function addWall() {
-
+    const loader = new THREE.TextureLoader()
     const room_geometry = new THREE.BoxGeometry(500, 120, 300);
     // Для новых версий ThreeJS
     const room_material = new THREE.MeshBasicMaterial({

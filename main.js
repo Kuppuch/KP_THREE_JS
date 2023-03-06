@@ -1,3 +1,4 @@
+import { coffeeParticles, ParticleSystem, ParticleSystemPoints } from "./src/particles/coffeeParticles.js";
 
 var Key = {
     _pressed: {},
@@ -43,34 +44,54 @@ controls.zoomSpeed = 1.2;
 controls.staticMoving = true;
 
 
-const loader = new THREE.TextureLoader();
-const scene = new THREE.Scene();
-let light;
+
+const scene = new THREE.Scene()
+let light
+let pouringInProcess = false
 
 
 window.onload = (event) => {
+
+    const pourButton = document.querySelector('#pour')
     
-    scene.background = new THREE.Color(0x999999);
+    scene.background = new THREE.Color(0x999999)
 
     light = addLight()
     scene.add(light)
 
-    scene.add(addWall());
-    scene.add(addFlor());
-    scene.add(addRoof());
+    scene.add(addWall())
+    scene.add(addFlor())
+    scene.add(addRoof())
 
-    scene.add(addTable());
+    scene.add(addTable())
 
 
-    scene.add(addCoffeeMachine());
-    scene.add(addPourer());
+    scene.add(addCoffeeMachine())
+    scene.add(addPourer())
     
-    scene.add(addGlass());
+    //scene.add(addGlass());
 
     // Добавление частиц
-    addParticles(scene);
+    addParticles(scene)
 
-    requestAnimationFrame(render);
+    scene.add(fillingGlass())
+
+    const clock = new THREE.Clock()
+    let pouringPercent = 0
+    const cp = new coffeeParticles()
+
+    pourButton.addEventListener('click', () => {
+        if (!pouringInProcess) {
+          pouringPercent = 0
+          pouringInProcess = true
+          cp.init()
+        } else {
+          pouringInProcess = false
+          destructParticles()
+        }
+      })
+
+    requestAnimationFrame(render)
 };
 
 
@@ -113,46 +134,46 @@ function dynamo() {
 }
 
 function render(time) {
-    time *= 0.001;
+    time *= 0.001
 
     if (resizeRendererToDisplaySize(renderer)) {
-        const canvas = renderer.domElement;
-        camera.aspect = canvas.clientWidth / canvas.clientHeight;
-        camera.updateProjectionMatrix();
+        const canvas = renderer.domElement
+        camera.aspect = canvas.clientWidth / canvas.clientHeight
+        camera.updateProjectionMatrix()
     }
 
-    dynamo();
-    controls.update();
+    dynamo()
+    controls.update()
     if (positions.length > 0) {
-        coffeeUpdate();
+        coffeeUpdate()
     }
 
-    renderer.render(scene, camera);
+    renderer.render(scene, camera)
 
-    requestAnimationFrame(render);
+    requestAnimationFrame(render)
 }
 
 function coffeeUpdate() {
     let len = particleSystem.geometry.attributes.position.array.length
     for (let i = 1; i < len; i += 3) {
-        particleSystem.geometry.attributes.position.array[i] -= 0.1;
+        particleSystem.geometry.attributes.position.array[i] -= 0.1
         if (particleSystem.geometry.attributes.position.array[i] < -1) {
             particleSystem.geometry.attributes.position.array[i] = 3
         }
     }
-    particleSystem.geometry.attributes.position.needsUpdate = true;
+    particleSystem.geometry.attributes.position.needsUpdate = true
 }
 
 
 
 window.addEventListener('keyup', function (event) {
-        Key.onKeyup(event);
+        Key.onKeyup(event)
     },
     false
 );
 
 window.addEventListener('keydown', function (event) {
-        Key.onKeydown(event);
+        Key.onKeydown(event)
     },
     false
 );

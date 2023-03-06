@@ -35,7 +35,7 @@ function parseCollada(colladaXml) {
 
 function loadXMLModel() {
     var request = new XMLHttpRequest();
-    request.open("GET", "lamp.xml");
+    request.open("GET", "src/mesh/lamp.xml");
     request.onreadystatechange = function () {
         if (request.readyState == 4) {
             var colladaJson = parseCollada(request.responseText);
@@ -65,7 +65,6 @@ function lampInit() {
     scene.add(lamp);
 }
 
-window.onload = () => {
-    loadXMLModel();
-
-} 
+// window.onload = () => {
+//     loadXMLModel();
+// } 
