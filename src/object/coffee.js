@@ -85,7 +85,6 @@ function destroyCoffee() {
 function timerUpdate() {
     for (let i = 6; i > 0; i--) {
         timer.innerHTML = i;
-        //console.log(i);
         setTimeout(timerUpdate, 1000, i)
     }
 }
