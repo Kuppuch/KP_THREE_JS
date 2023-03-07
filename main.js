@@ -48,6 +48,9 @@ controls.staticMoving = true;
 const scene = new THREE.Scene()
 let light
 let pouringInProcess = false
+let cp
+const clock = new THREE.Clock()
+let pouringPercent = 0
 
 
 window.onload = (event) => {
@@ -76,9 +79,8 @@ window.onload = (event) => {
 
     scene.add(fillingGlass())
 
-    const clock = new THREE.Clock()
-    let pouringPercent = 0
-    const cp = new coffeeParticles(scene)
+    
+    cp = new coffeeParticles(scene)
 
     pourButton.addEventListener('click', () => {
         if (!pouringInProcess) {
@@ -141,6 +143,28 @@ function render(time) {
         camera.aspect = canvas.clientWidth / canvas.clientHeight
         camera.updateProjectionMatrix()
     }
+
+    const delta = clock.getDelta()
+
+    // TODO: move to function
+    if (pouringInProcess) {
+      pouringPercent += 0.1 * delta
+
+      cp.animate(delta)
+
+      if (pouringPercent > 0.7) {
+        pouringPercent = 0.7
+        pouringInProcess = false
+        cp.destruct()
+      }
+
+      //waterClipPlane.constant = getClipPlanePosition(pouringPercent)
+      //const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.01 // radius
+      //waterTopSide.scale.set(scale, scale, 1)
+      //waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
+    }
+
+
 
     dynamo()
     controls.update()

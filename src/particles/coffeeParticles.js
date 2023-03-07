@@ -32,7 +32,7 @@ let system = ParticleSystem
 
 export class coffeeParticles {
     scene = THREE.Scene
-    particlesCount = 500
+    particlesCount = 1000
     scatter = 0.6
 
     constructor(scene) {
@@ -132,7 +132,7 @@ export class coffeeParticles {
         const positionsAttribute = system.points.geometry
             .getAttribute('position')
 
-        for (let i = 0; i < particlesCount; i++) {
+        for (let i = 0; i < this.particlesCount; i++) {
             let y = positionsAttribute.getY(i)
             y += -12 * delta
 
