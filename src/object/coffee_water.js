@@ -45,13 +45,18 @@ function fillingGlass() {
     water.add(base)
     water.add(topSide)
 
-    return water
+    return {
+        object: water,
+        clipPlane,
+        topSideGeometry,
+        topSide
+    }
 }
 
 const coffeeWaterHeight = 6
 
 function getClipPosition(percent) {
-    1.499 + coffeeWaterHeight * percent
+    return 1.499 + coffeeWaterHeight * percent
 }
 
 function getClipPlanePosition(percent) {

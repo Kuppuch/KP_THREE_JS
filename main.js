@@ -52,6 +52,12 @@ let cp
 const clock = new THREE.Clock()
 let pouringPercent = 0
 
+const {
+    object: water,
+    clipPlane: waterClipPlane,
+    topSide: waterTopSide,
+  } = fillingGlass()
+
 
 window.onload = (event) => {
 
@@ -72,12 +78,16 @@ window.onload = (event) => {
     scene.add(addCoffeeMachine())
     scene.add(addPourer())
     
-    //scene.add(addGlass());
+    scene.add(water)
+    scene.add(waterTopSide)
+
+    scene.add(addGlass());
 
     // Добавление частиц
     addParticles(scene)
 
-    scene.add(fillingGlass())
+    //scene.add(fillingGlass())
+    
 
     
     cp = new coffeeParticles(scene)
@@ -144,11 +154,25 @@ function render(time) {
         camera.updateProjectionMatrix()
     }
 
-    const delta = clock.getDelta()
+    
 
-    // TODO: move to function
     if (pouringInProcess) {
-      pouringPercent += 0.1 * delta
+        coffeeAnimateCalc()
+    }
+
+
+
+    dynamo()
+    controls.update()
+
+    renderer.render(scene, camera)
+
+    requestAnimationFrame(render)
+}
+
+function coffeeAnimateCalc() {
+    const delta = clock.getDelta()
+    pouringPercent += 0.1 * delta
 
       cp.animate(delta)
 
@@ -158,34 +182,10 @@ function render(time) {
         cp.destruct()
       }
 
-      //waterClipPlane.constant = getClipPlanePosition(pouringPercent)
-      //const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.01 // radius
-      //waterTopSide.scale.set(scale, scale, 1)
-      //waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
-    }
-
-
-
-    dynamo()
-    controls.update()
-    if (positions.length > 0) {
-        coffeeUpdate()
-    }
-
-    renderer.render(scene, camera)
-
-    requestAnimationFrame(render)
-}
-
-function coffeeUpdate() {
-    let len = particleSystem.geometry.attributes.position.array.length
-    for (let i = 1; i < len; i += 3) {
-        particleSystem.geometry.attributes.position.array[i] -= 0.1
-        if (particleSystem.geometry.attributes.position.array[i] < -1) {
-            particleSystem.geometry.attributes.position.array[i] = 3
-        }
-    }
-    particleSystem.geometry.attributes.position.needsUpdate = true
+      waterClipPlane.constant = getClipPlanePosition(pouringPercent)
+      const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.01 // radius
+      waterTopSide.scale.set(scale, scale, 1)
+      waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
 }
 
 
