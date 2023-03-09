@@ -67,6 +67,8 @@ const {
 window.onload = (event) => {
 
     const pourButton = document.querySelector('#pour')
+    //const control = document.querySelectorAll('input[name=move]')
+    control()
 
     scene.background = new THREE.Color(0x999999)
 
@@ -208,3 +210,4 @@ window.addEventListener('keydown', function (event) {
     },
     false
 );
+

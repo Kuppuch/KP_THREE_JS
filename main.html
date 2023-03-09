@@ -24,7 +24,8 @@
             align-items: center;
         }
 
-        .item {
+        .move_control {
+            display: flex;
             margin: 0 15px;
         }
     </style>
@@ -38,17 +39,19 @@
     <div id="control">
         <button id="pour">Налить кофе</button>
         
-        <div class="item">
+        <div class="move_control">
             <span>Управлять:</span>
-            <input type="radio" id="light" name="move" value="light"
-                   checked>
-            <label for="light">Свет</label>
-          </div>
-      
-          <div>
-            <input type="radio" id="camera" name="move" value="camera">
-            <label for="camera">Камера</label>
-          </div>
+            <div>
+                <input type="radio" id="light" name="move" value="light" checked>
+                <label for="light">Свет</label>
+            </div>
+    
+            <div>
+                <input type="radio" id="camera" name="move" value="camera">
+                <label for="camera">Камера</label>
+            </div>
+        </div>
+        
     </div>
 
     <script type="x-shader/x-vertex" id="vertexshader">
@@ -91,9 +94,13 @@
     <script src="src/object/particles.js"></script>
     <!-- <script src="src/object/"></script> -->
     <script src="src/object/coffee_water.js"></script>
+
+    <script src="src/control.js"></script>
+
     <script type="module" src="src/particles/coffeeParticles.js"></script>
     <script type="module" src="main.js"></script>
-    
+
 
 </body>
+
 </html>
