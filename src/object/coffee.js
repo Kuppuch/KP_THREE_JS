@@ -58,33 +58,3 @@ function coffeeInit() {
     particleSystem = new THREE.Points(geometryP, shaderMaterial);
     particleSystem.name = "particleSystem";
 }
-
-async function pourCoffee() {
-    if (coffeeProcess) {
-        return;
-    }
-    coffeeProcess = true;
-
-    if (positions.length < 1) {
-        coffeeInit();
-    }
-
-    scene.add(particleSystem);
-
-    //await timerUpdate();
-
-    setTimeout(destroyCoffee, 5000);
-}
-
-function destroyCoffee() {
-    let coffeeStream = scene.getObjectByName(particleSystem.name);
-    scene.remove(coffeeStream);
-    coffeeProcess = false;
-}
-
-function timerUpdate() {
-    for (let i = 6; i > 0; i--) {
-        timer.innerHTML = i;
-        setTimeout(timerUpdate, 1000, i)
-    }
-}

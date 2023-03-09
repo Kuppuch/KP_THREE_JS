@@ -87,17 +87,13 @@ window.onload = (event) => {
 
     scene.add(addGlass());
 
-    // Добавление частиц
-    //addParticles(scene)
-
-
-
-
     cp = new coffeeParticles(scene)
 
 
     pourButton.addEventListener('click', () => {
         if (!pouringInProcess) {
+            let foam = scene.getObjectByName( "foam" );
+            scene.remove(foam)
             pouringPercent = 0
             pouringInProcess = true
             cp.init()
@@ -181,6 +177,7 @@ function coffeeAnimateCalc() {
     cp.animate(delta)
 
     if (pouringPercent > 0.8) {
+        scene.add(addParticles())
         pouringInProcess = false
         cp.destruct()
     }
