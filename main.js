@@ -38,8 +38,8 @@ renderer.localClippingEnabled = true;
 const aspect = 2; // the canvas default
 const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
 camera.position.x = 0
-camera.position.y = 1
-camera.position.z = 25
+camera.position.y = 10
+camera.position.z = 75
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 var controls = new THREE.TrackballControls(camera, canvas);
@@ -70,8 +70,15 @@ window.onload = (event) => {
 
     scene.background = new THREE.Color(0x999999)
 
-    light = addLight()
+    light = addLight(-75, 100, 50)
     scene.add(light)
+    light = addLight(-75, -100, 50)
+    scene.add(light)
+
+    let dl1 = directionLight(0, 70, 0)
+
+
+    scene.add(setBarLight(10))
 
     scene.add(addWall())
     scene.add(addFlor())

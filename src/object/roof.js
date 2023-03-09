@@ -6,7 +6,7 @@ function addRoof() {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(16, 8);
-    const roof_material = new THREE.MeshBasicMaterial({
+    const roof_material = new THREE.MeshLambertMaterial({
         map: texture,
         side: THREE.DoubleSide
     });

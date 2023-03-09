@@ -5,7 +5,7 @@ function addFlor() {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(6, 3);
-    const flor_material = new THREE.MeshBasicMaterial({
+    const flor_material = new THREE.MeshLambertMaterial({
         map: texture,
         side: THREE.DoubleSide
     });

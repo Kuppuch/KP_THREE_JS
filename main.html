@@ -18,8 +18,14 @@
         }
 
         #control {
+            display: flex;
             width: 100vw;
             height: 5vh;
+            align-items: center;
+        }
+
+        .item {
+            margin: 0 15px;
         }
     </style>
     <script src="three.js"></script>
@@ -31,7 +37,18 @@
     <canvas id="c" width="1240" height="870"></canvas>
     <div id="control">
         <button id="pour">Налить кофе</button>
-        <span id="timer">5</span>
+        
+        <div class="item">
+            <span>Управлять:</span>
+            <input type="radio" id="light" name="move" value="light"
+                   checked>
+            <label for="light">Свет</label>
+          </div>
+      
+          <div>
+            <input type="radio" id="camera" name="move" value="camera">
+            <label for="camera">Камера</label>
+          </div>
     </div>
 
     <script type="x-shader/x-vertex" id="vertexshader">
@@ -63,6 +80,7 @@
     <script src="src/object/import_lamp.js"></script>
     <script src="src/object/coffee.js"></script>
     <script src="src/object/light.js"></script>
+    <script src="src/object/directionLigth.js"></script>
     <script src="src/object/table.js"></script>
     <script src="src/object/roof.js"></script>
     <script src="src/object/coffeeMachine.js"></script>
