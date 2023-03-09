@@ -55,7 +55,7 @@ export class coffeeParticles {
 
             sizes.push(0.2)
         }
-
+        
         return {
             positions,
             colors,
@@ -78,9 +78,6 @@ export class coffeeParticles {
             },
             vertexShader,
             fragmentShader,
-
-            // blending: THREE.AdditiveBlending,
-            // depthTest: false,
             transparent: true,
             vertexColors: true,
         })
@@ -90,7 +87,6 @@ export class coffeeParticles {
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
         geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1).setUsage(THREE.DynamicDrawUsage))
-
         const points = new THREE.Points(geometry, material)
         points.name = 'particle-system'
 

@@ -1,4 +1,8 @@
-import { coffeeParticles, ParticleSystem, ParticleSystemPoints } from "./src/particles/coffeeParticles.js";
+import {
+    coffeeParticles,
+    ParticleSystem,
+    ParticleSystemPoints
+} from "./src/particles/coffeeParticles.js";
 
 var Key = {
     _pressed: {},
@@ -27,6 +31,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.shadowMapEnabled = true;
 renderer.shadowMapType = THREE.PCFSoftShadowMap;
+renderer.localClippingEnabled = true;
 
 
 
@@ -56,13 +61,13 @@ const {
     object: water,
     clipPlane: waterClipPlane,
     topSide: waterTopSide,
-  } = fillingGlass()
+} = fillingGlass(0)
 
 
 window.onload = (event) => {
 
     const pourButton = document.querySelector('#pour')
-    
+
     scene.background = new THREE.Color(0x999999)
 
     light = addLight()
@@ -77,31 +82,30 @@ window.onload = (event) => {
 
     scene.add(addCoffeeMachine())
     scene.add(addPourer())
-    
+
     scene.add(water)
-    scene.add(waterTopSide)
 
     scene.add(addGlass());
 
     // Добавление частиц
-    addParticles(scene)
+    //addParticles(scene)
 
-    //scene.add(fillingGlass())
-    
 
-    
+
+
     cp = new coffeeParticles(scene)
+
 
     pourButton.addEventListener('click', () => {
         if (!pouringInProcess) {
-          pouringPercent = 0
-          pouringInProcess = true
-          cp.init()
+            pouringPercent = 0
+            pouringInProcess = true
+            cp.init()
         } else {
-          pouringInProcess = false
-          destructParticles()
+            pouringInProcess = false
+            cp.destruct()
         }
-      })
+    })
 
     requestAnimationFrame(render)
 };
@@ -154,7 +158,7 @@ function render(time) {
         camera.updateProjectionMatrix()
     }
 
-    
+
 
     if (pouringInProcess) {
         coffeeAnimateCalc()
@@ -174,18 +178,17 @@ function coffeeAnimateCalc() {
     const delta = clock.getDelta()
     pouringPercent += 0.1 * delta
 
-      cp.animate(delta)
+    cp.animate(delta)
 
-      if (pouringPercent > 0.7) {
-        pouringPercent = 0.7
+    if (pouringPercent > 0.8) {
         pouringInProcess = false
         cp.destruct()
-      }
+    }
 
-      waterClipPlane.constant = getClipPlanePosition(pouringPercent)
-      const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.01 // radius
-      waterTopSide.scale.set(scale, scale, 1)
-      waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
+    waterClipPlane.constant = getClipPlanePosition(pouringPercent)
+    const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.09 // radius
+    waterTopSide.scale.set(scale, scale, 1)
+    waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
 }
 
 

@@ -1,6 +1,15 @@
-function fillingGlass() {
+const coffeeWaterHeight = 6
+
+function getClipPosition(percent) {
+    return 1.5 + coffeeWaterHeight * percent
+}
+
+function getClipPlanePosition(percent) {
+    return -coffeeWaterHeight * (1 - percent)
+}
+
+function fillingGlass(fillingPercent = 0.8) {
     
-    let fillingPercent = 0.8
     const water = new THREE.Object3D
 
     water.position.set(0, -7.5, 2)
@@ -10,7 +19,7 @@ function fillingGlass() {
         getClipPlanePosition(fillingPercent),
     )
 
-    const material = new THREE.MeshPhongMaterial({
+    const clipMaterial = new THREE.MeshPhongMaterial({
         clippingPlanes: [clipPlane],
         clipShadows: true,
         color: 0x5A4637,
@@ -24,18 +33,18 @@ function fillingGlass() {
 
     const points = []
 
-    for (let i = 0; i < 1; i += 0.01) {
+    for (let i = 0; i < 0.8; i += 0.01) {
         points.push(
             getCoffeeGlassPoint(i, -0.1)
         )
     }
 
     const baseGeometry = new THREE.LatheGeometry(points, 32)
-    const base = new THREE.Mesh(baseGeometry, material)
+    const base = new THREE.Mesh(baseGeometry, clipMaterial)
     base.position.set(0, 6.3, 0)
 
     const topSideGeometry = new THREE.CircleGeometry(1, 32)
-    const topSide = new THREE.Mesh(topSideGeometry, material)
+    const topSide = new THREE.Mesh(topSideGeometry, clipMaterial)
 
     const scale = getCoffeeGlassPoint(fillingPercent - 0.01).x
     topSide.scale.set(scale, scale, 1)
@@ -53,12 +62,3 @@ function fillingGlass() {
     }
 }
 
-const coffeeWaterHeight = 6
-
-function getClipPosition(percent) {
-    return 1.499 + coffeeWaterHeight * percent
-}
-
-function getClipPlanePosition(percent) {
-    return -coffeeWaterHeight * (1 - percent)
-}
