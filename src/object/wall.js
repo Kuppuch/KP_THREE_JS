@@ -4,7 +4,7 @@ function addWall() {
     // Для новых версий ThreeJS
     const room_material = new THREE.MeshLambertMaterial({
         map: loader.load('tex/wall.jpg'),
-        side: THREE.DoubleSide
+        side: THREE.BackSide
     });
 
     var room = new THREE.Mesh(room_geometry, room_material);

@@ -68,7 +68,6 @@ const {
 window.onload = (event) => {
 
     const pourButton = document.querySelector('#pour')
-    //const control = document.querySelectorAll('input[name=move]')
     control()
 
     scene.background = new THREE.Color(0x999999)
@@ -78,30 +77,24 @@ window.onload = (event) => {
     light = addLight(-75, -100, 50)
     scene.add(light)
 
-    let dl1 = directionLight(0, 70, 0)
-
-
-    scene.add(setBarLight(10))
-
-    scene.add(addWall())
-    scene.add(addFlor())
-    scene.add(addRoof())
-
     let {
-        table: table,
-        top_table: top_table
-    } = addTable()
-    scene.add(table)
-    scene.add(top_table)
+        top_table: barTable,
+        table: topBarTable
+    } = addBarTable()
 
-
-
-    scene.add(addCoffeeMachine())
-    scene.add(addPourer())
-
-    scene.add(water)
-
-    scene.add(addGlass());
+    sceneBuild(scene, [
+        setBarLight(10),
+        addWall(),
+        addFlor(),
+        addRoof(),
+        barTable,
+        topBarTable,
+        addCoffeeMachine(),
+        addPourer(),
+        water,
+        addGlass(),
+        addTable(10),
+    ])
 
     cp = new coffeeParticles(scene)
 
@@ -170,19 +163,14 @@ function render(time) {
         camera.updateProjectionMatrix()
     }
 
-
-
     if (pouringInProcess) {
         coffeeAnimateCalc()
     }
-
-
 
     dynamo()
     controls.update()
 
     renderer.render(scene, camera)
-
     requestAnimationFrame(render)
 }
 

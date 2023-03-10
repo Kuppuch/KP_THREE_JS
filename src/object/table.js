@@ -1,46 +1,34 @@
-function addTable() {
-    const loader = new THREE.TextureLoader()
-    const table_geometry = new THREE.BoxGeometry(350, 30, 30)
-    // Для новых версий ThreeJS
-    let texture = loader.load('tex/wood-table.jpg')
-    texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(6, 1)
-    const table_material = new THREE.MeshLambertMaterial({
-        map: texture,
-        side: THREE.DoubleSide
-    })
+function addTable(count) {
+    let objects = []
+    for (let i = 0; i < count; i++) {
+        const object = new THREE.Object3D
+        let geometry = new THREE.CylinderGeometry(5, 5, 24, 32)
+        const material = new THREE.MeshBasicMaterial({
+            color: 0x773300
+        })
+        let cylinder = new THREE.Mesh(geometry, material)
+        cylinder.position.set(0, 0, 0)
+        object.add(cylinder)
+    
+        geometry = new THREE.CylinderGeometry(30, 30, 2, 32)
+        const loader = new THREE.TextureLoader()
+        const material2 = new THREE.MeshBasicMaterial({
+            map: loader.load('tex/Marble 01_baseColor.png')
+        })
+        cylinder = new THREE.Mesh(geometry, material2)
+        cylinder.position.set(0, 12, 0)
+        object.add(cylinder)
 
-    let table = new THREE.Mesh(table_geometry, table_material)
-    table.position.y = -30
-    table.position.x = -75
-    table.castShadow = true
-    table.receiveShadow = true
-
-    // Загрузка текстур для старых версий ThreeJS
-    // var table_material = new THREE.MeshLambertMaterial({
-    //     map: new THREE.ImageUtils.loadTexture('tex/wood-table.jpg')
-    // });
-
-    texture = loader.load('tex/Marble 01_baseColor.png')
-    texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(6, 1)
-    const top_table_material = new THREE.MeshLambertMaterial({
-        map: texture,
-        side: THREE.DoubleSide
-    })
-
-    const top_table_geometry = new THREE.BoxGeometry(360, 5, 40)
-    let top_table = new THREE.Mesh(top_table_geometry, top_table_material)
-    top_table.position.y = -12.5
-    top_table.position.x = -75
-    top_table.castShadow = true
-    top_table.receiveShadow = true
-
-    return {
-        table,
-        top_table
+        let offsetX = 0
+        let offsetZ = 0
+        if (i > 4) {
+            offsetX = 360
+            offsetZ = 80
+        }
+    
+        object.position.set(-200 + 80 * i - offsetX, -28, 100 + offsetZ)
+        objects.push(object)
     }
 
+    return objects
 }

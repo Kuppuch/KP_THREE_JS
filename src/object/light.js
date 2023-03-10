@@ -1,6 +1,6 @@
 function addLight(x, y, z) {
     const color = 0xFFFFFF
-    var light = new THREE.SpotLight(color, 0.5)
+    var light = new THREE.SpotLight(color, 0.7)
     light.position.set(x, y, z)
     light.angle = 15
     light.castShadow = true
