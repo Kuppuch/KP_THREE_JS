@@ -50,6 +50,7 @@ controls.staticMoving = true;
 
 
 
+
 const scene = new THREE.Scene()
 let light
 let pouringInProcess = false
@@ -86,7 +87,13 @@ window.onload = (event) => {
     scene.add(addFlor())
     scene.add(addRoof())
 
-    scene.add(addTable())
+    let {
+        table: table,
+        top_table: top_table
+    } = addTable()
+    scene.add(table)
+    scene.add(top_table)
+
 
 
     scene.add(addCoffeeMachine())
@@ -101,7 +108,7 @@ window.onload = (event) => {
 
     pourButton.addEventListener('click', () => {
         if (!pouringInProcess) {
-            let foam = scene.getObjectByName( "foam" );
+            let foam = scene.getObjectByName("foam");
             scene.remove(foam)
             pouringPercent = 0
             pouringInProcess = true
@@ -210,4 +217,3 @@ window.addEventListener('keydown', function (event) {
     },
     false
 );
-
