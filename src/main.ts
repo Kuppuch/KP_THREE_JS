@@ -15,6 +15,8 @@ import * as THREE from 'three'
 import { coffeeParticles } from './particles/coffeeParticles'
 import {barTable} from "./objects/barTable";
 import {barLight} from "./objects/directionLigth";
+import {window} from "./objects/window";
+import {chair} from "./objects/chair";
 
 export const init = (canvas: HTMLCanvasElement): void => {
   const container = document.querySelector('#app') as HTMLDivElement
@@ -25,7 +27,7 @@ export const init = (canvas: HTMLCanvasElement): void => {
   const renderer = initializeRenderer(canvas)
   renderer.setSize(container.clientWidth, container.clientHeight)
 
-  const camera = initializeCamera()
+  const camera = initializeCamera(-270, 0, 100)
   const controls = initializeControls(camera, canvas)
 
   const scene = initializeScene()
@@ -59,7 +61,10 @@ export const init = (canvas: HTMLCanvasElement): void => {
     water,
     coffeeGlass(),
     barLight(10),
+    window(),
   ])
+
+  chair(scene)
 
   const {
     click: startParticles,
