@@ -27,9 +27,10 @@ var Key = {
 
 var canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({
+    antialias: true,
     canvas
 });
-renderer.shadowMapEnabled = true;
+renderer.shadowMap.enabled = true;
 renderer.shadowMapType = THREE.PCFSoftShadowMap;
 renderer.localClippingEnabled = true;
 
@@ -78,8 +79,8 @@ window.onload = (event) => {
     scene.add(light)
 
     let {
-        top_table: barTable,
-        table: topBarTable
+        top_table: topBarTable,
+        table: barTable
     } = addBarTable()
 
     sceneBuild(scene, [
@@ -94,6 +95,7 @@ window.onload = (event) => {
         water,
         addGlass(),
         addTable(10),
+        addWindow()
     ])
 
     cp = new coffeeParticles(scene)

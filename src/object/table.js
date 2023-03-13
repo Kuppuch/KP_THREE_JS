@@ -3,20 +3,24 @@ function addTable(count) {
     for (let i = 0; i < count; i++) {
         const object = new THREE.Object3D
         let geometry = new THREE.CylinderGeometry(5, 5, 24, 32)
-        const material = new THREE.MeshBasicMaterial({
+        const material = new THREE.MeshLambertMaterial({
             color: 0x773300
         })
         let cylinder = new THREE.Mesh(geometry, material)
         cylinder.position.set(0, 0, 0)
+        cylinder.castShadow = true
+        cylinder.receiveShadow = true
         object.add(cylinder)
     
         geometry = new THREE.CylinderGeometry(30, 30, 2, 32)
         const loader = new THREE.TextureLoader()
-        const material2 = new THREE.MeshBasicMaterial({
+        const material2 = new THREE.MeshLambertMaterial({
             map: loader.load('tex/Marble 01_baseColor.png')
         })
         cylinder = new THREE.Mesh(geometry, material2)
         cylinder.position.set(0, 12, 0)
+        cylinder.castShadow = true
+        cylinder.receiveShadow = true
         object.add(cylinder)
 
         let offsetX = 0

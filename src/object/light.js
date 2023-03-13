@@ -3,7 +3,7 @@ function addLight(x, y, z) {
     var light = new THREE.SpotLight(color, 0.7)
     light.position.set(x, y, z)
     light.angle = 15
-    light.castShadow = true
+    //light.castShadow = true
 
     light.shadowMapSizeWidth = 512
     light.shadowMapSizeHeight = 512

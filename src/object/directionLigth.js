@@ -25,6 +25,24 @@ function setBarLight(count) {
         dl.target = targetObject;
 
         lights.add(dl)
+
+        const material = new THREE.MeshLambertMaterial({
+            color: 0x4444FF,
+            side: THREE.FrontSide
+        });
+        let geometry = new THREE.CylinderGeometry(4, 8, 10, 32)
+        let mesh = new THREE.Mesh(geometry, material)
+        mesh.position.set(x, 44.6, 0)
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        lights.add(mesh)
+
+        geometry = new THREE.CylinderGeometry(2, 2, 31, 32)
+        mesh = new THREE.Mesh(geometry, material)
+        mesh.position.set(x, 64, 0)
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        lights.add(mesh)
     }
     return lights
 }

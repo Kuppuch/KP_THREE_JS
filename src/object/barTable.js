@@ -8,7 +8,7 @@ function addBarTable() {
     texture.repeat.set(6, 1)
     const table_material = new THREE.MeshLambertMaterial({
         map: texture,
-        side: THREE.DoubleSide
+        side: THREE.FrontSide
     })
 
     let table = new THREE.Mesh(table_geometry, table_material)
@@ -28,7 +28,7 @@ function addBarTable() {
     texture.repeat.set(6, 1)
     const top_table_material = new THREE.MeshLambertMaterial({
         map: texture,
-        side: THREE.DoubleSide
+        side: THREE.FrontSide
     })
 
     const top_table_geometry = new THREE.BoxGeometry(360, 5, 40)
