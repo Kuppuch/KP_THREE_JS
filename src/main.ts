@@ -13,6 +13,8 @@ import { coffeeGlass, getCoffeeGlassPoint } from './objects/coffeeGlass'
 import { getClipPlanePosition, getClipPosition, coffeeWater } from './objects/coffeeWater'
 import * as THREE from 'three'
 import { coffeeParticles } from './particles/coffeeParticles'
+import {barTable} from "./objects/barTable";
+import {barLight} from "./objects/directionLigth";
 
 export const init = (canvas: HTMLCanvasElement): void => {
   const container = document.querySelector('#app') as HTMLDivElement
@@ -38,16 +40,25 @@ export const init = (canvas: HTMLCanvasElement): void => {
     topSide: waterTopSide,
   } = coffeeWater(0)
 
+  const {
+    table: barTableMesh,
+    topTable,
+  } = barTable()
+
   buildScene(scene, [
-    light(),
+    light(-75, 100, 50),
+    light(-75, -100, 50),
     walls(),
     floor(),
     ceil(),
-    table(),
+    barTableMesh,
+    topTable,
+    table(10),
     coffeeMachine(),
     pourer(),
     water,
     coffeeGlass(),
+    barLight(10),
   ])
 
   const {

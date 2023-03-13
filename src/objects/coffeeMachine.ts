@@ -10,11 +10,11 @@ export const coffeeMachine = (): THREE.Mesh => {
 
   const material = new THREE.MeshLambertMaterial({
     color: 0x4444FF,
-    side: THREE.DoubleSide,
+    side: THREE.FrontSide,
   })
 
   const machine = new THREE.Mesh(geometry, material)
-  // machine.castShadow = true
+  machine.castShadow = true
   machine.receiveShadow = true
 
   return machine

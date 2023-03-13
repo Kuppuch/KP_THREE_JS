@@ -9,9 +9,15 @@ export const initializeScene = (): THREE.Scene => {
 
 export const buildScene = (
   scene: THREE.Scene,
-  objects: THREE.Object3D[],
+  objects: (THREE.Object3D|THREE.Object3D[])[],
 ): void => {
   objects.forEach((object) => {
-    scene.add(object)
+    if (Array.isArray(object)) {
+      object.forEach((entry) => {
+        scene.add(entry)
+      })
+    } else {
+      scene.add(object)
+    }
   })
 }

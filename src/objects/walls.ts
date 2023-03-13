@@ -4,7 +4,7 @@ import { textureLoader } from '../texture'
 export const walls = (): THREE.Mesh => {
   const geometry = new THREE.BoxGeometry(500, 120, 300)
 
-  const material = new THREE.MeshBasicMaterial({
+  const material = new THREE.MeshLambertMaterial({
     map: textureLoader.load('assets/wall.jpg'),
     side: THREE.BackSide,
   })
@@ -13,7 +13,7 @@ export const walls = (): THREE.Mesh => {
 
   room.position.y = 19.9
   room.position.z = 70
-  // room.castShadow = true
+  room.castShadow = true
   room.receiveShadow = true
 
   return room
