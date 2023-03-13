@@ -8,7 +8,7 @@ function addRoof() {
     texture.repeat.set(16, 8);
     const roof_material = new THREE.MeshLambertMaterial({
         map: texture,
-        side: THREE.DoubleSide
+        side: THREE.FrontSide
     });
 
     const roof = new THREE.Mesh(roof_geometry, roof_material);

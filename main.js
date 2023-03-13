@@ -150,7 +150,7 @@ function dynamo() {
     {
         light.position.y += 0.1;
     }
-    if (Key.isDown(Key.Ctrl)) // подскок
+    if (Key.isDown(Key.Ctrl))
     {
         light.position.y -= 0.1;
     }
