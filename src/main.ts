@@ -12,7 +12,7 @@ import { pourer } from './objects/pourer'
 import { coffeeGlass, getCoffeeGlassPoint } from './objects/coffeeGlass'
 import { getClipPlanePosition, getClipPosition, coffeeWater } from './objects/coffeeWater'
 import * as THREE from 'three'
-import {coffeeParticles} from "./particles/coffeeParticles";
+import { coffeeParticles } from './particles/coffeeParticles'
 
 export const init = (canvas: HTMLCanvasElement): void => {
   const container = document.querySelector('#app') as HTMLDivElement
@@ -75,7 +75,7 @@ export const init = (canvas: HTMLCanvasElement): void => {
   })
 
   const render = () => {
-    requestAnimationFrame(render)
+    // requestAnimationFrame(render)
 
     const delta = clock.getDelta()
 
@@ -102,11 +102,20 @@ export const init = (canvas: HTMLCanvasElement): void => {
   }
 
   renderer.setAnimationLoop(render)
-  requestAnimationFrame(render)
+  // requestAnimationFrame(render)
 }
 
 addEventListener('load', () => {
-  const canvas = document.querySelector('#canvas') as HTMLCanvasElement
+  const container = document.querySelector('#app')
 
-  init(canvas)
+  if (container) {
+    document.querySelector('#canvas')?.remove()
+
+    const canvas = document.createElement('canvas') as HTMLCanvasElement
+    canvas.id = 'canvas'
+
+    container?.prepend(canvas)
+
+    init(canvas)
+  }
 })
