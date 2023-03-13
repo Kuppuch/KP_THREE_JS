@@ -4,6 +4,9 @@ import {
     ParticleSystemPoints
 } from "./src/particles/coffeeParticles.js";
 
+// import * as THREE from './three.module.js'
+// import { GLTFLoader } from './script/GLTFLoader.js';
+
 var Key = {
     _pressed: {},
 
@@ -34,6 +37,7 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMapType = THREE.PCFSoftShadowMap;
 renderer.localClippingEnabled = true;
 
+// const loader = new GLTFLoader();
 
 
 const aspect = 2; // the canvas default
