@@ -11,7 +11,7 @@ export const ceil = (): THREE.Mesh => {
 
   const material = new THREE.MeshBasicMaterial({
     map: texture,
-    side: THREE.DoubleSide
+    side: THREE.FrontSide
   })
 
   const plane = new THREE.Mesh(geometry, material)

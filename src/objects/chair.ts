@@ -13,18 +13,35 @@ export const chair = (
     const sy: number = 10
     const sz: number = 10
 
-    const px: number = -210
+    const px: number = -215
     const py: number = -35
-    const pz: number = 60
+    const pz: number = 65
 
-    const ry: number = 45
+    let ry: number = -45
+
 
 
     for (let i = 0; i < 20; i++) {
-      const chair = gltf.scene
+      let pzOffset: number = 0
+      let ryOffset: number = 0
+
+      let pxOffestRow2: number = 0
+      let pzOffestRow2: number = 0
+
+      if (i % 2 == 1) {
+        ryOffset = -135
+        pzOffset = 65
+      }
+
+      if (i > 9) {
+        pxOffestRow2 = 365
+        pzOffestRow2 = 80
+      }
+
+      const chair = gltf.scene.clone()
       chair.scale.set(sx, sy, sz)
-      chair.position.set(px + i, py, pz)
-      chair.rotateY(ry)
+      chair.position.set(px + i * 40 - pxOffestRow2, py, pz + pzOffset + pzOffestRow2)
+      chair.rotateY(ry + ryOffset)
 
       scene.add(chair)
 

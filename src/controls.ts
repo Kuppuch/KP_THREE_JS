@@ -6,9 +6,9 @@ export const initializeControls = (
   canvas: HTMLCanvasElement,
 ): TrackballControls => {
   const controls = new TrackballControls(camera, canvas)
-  controls.rotateSpeed = 2
+  controls.rotateSpeed = 4
   controls.noZoom = false
-  controls.zoomSpeed = 1.2
+  controls.zoomSpeed = 1.5
   controls.staticMoving = true
   return controls
 }

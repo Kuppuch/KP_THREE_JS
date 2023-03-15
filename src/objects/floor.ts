@@ -11,12 +11,12 @@ export const floor = (): THREE.Mesh => {
 
   const material = new THREE.MeshBasicMaterial({
     map: texture,
-    side: THREE.DoubleSide
+    side: THREE.FrontSide
   })
 
   const plane = new THREE.Mesh(geometry, material)
-  plane.rotation.x = Math.PI / 2
-  plane.position.y = -40
+  plane.rotation.x = 3 * Math.PI / 2
+  plane.position.y = -39.5
   plane.position.z = 70
 
   return plane
