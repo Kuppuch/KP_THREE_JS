@@ -13,10 +13,11 @@ import { coffeeGlass, getCoffeeGlassPoint } from './objects/coffeeGlass'
 import { getClipPlanePosition, getClipPosition, coffeeWater } from './objects/coffeeWater'
 import * as THREE from 'three'
 import { coffeeParticles } from './particles/coffeeParticles'
-import {barTable} from "./objects/barTable";
-import {barLight} from "./objects/directionLigth";
-import {window} from "./objects/window";
-import {chair} from "./objects/chair";
+import { barTable } from './objects/barTable'
+import { barLight } from './objects/directionLigth'
+import { window } from './objects/window'
+import { chair } from './objects/chair'
+import { fanFrame, loadFan } from './objects/fan'
 
 export const init = (canvas: HTMLCanvasElement): void => {
   const container = document.querySelector('#app') as HTMLDivElement
@@ -27,7 +28,7 @@ export const init = (canvas: HTMLCanvasElement): void => {
   const renderer = initializeRenderer(canvas)
   renderer.setSize(container.clientWidth, container.clientHeight)
 
-  const camera = initializeCamera(-270, 0, 100)
+  const camera = initializeCamera(20, 0, 70)
   const controls = initializeControls(camera, canvas)
 
   const scene = initializeScene()
@@ -62,9 +63,19 @@ export const init = (canvas: HTMLCanvasElement): void => {
     coffeeGlass(),
     barLight(10),
     window(),
+    fanFrame(),
   ])
 
+  let fan: THREE.Group
+
   chair(scene)
+  loadFan().then((objectScene) => {
+    objectScene.scale.set(10, 10, 10)
+    objectScene.rotateY(Math.PI / 2)
+    objectScene.position.set(0, 68, -79)
+    fan = objectScene
+    scene.add(objectScene)
+  })
 
   const {
     click: startParticles,
@@ -94,6 +105,10 @@ export const init = (canvas: HTMLCanvasElement): void => {
     // requestAnimationFrame(render)
 
     const delta = clock.getDelta()
+
+    if (fan) {
+      fan.rotateX(50)
+    }
 
     // TODO: move to function
     if (pouringInProcess) {
