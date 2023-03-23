@@ -152,10 +152,9 @@ export const init = (canvas: HTMLCanvasElement): void => {
 
     // TODO: move to function
     if (pouringInProcess) {
-      pouringPercent += 0.1 * delta
-
       animateParticles(delta)
       if (glass.position.x > -1 && glass.position.x < 1) {
+        pouringPercent += 0.1 * delta
         if (pouringPercent > 0.7) {
           pouringPercent = 0.7
           pouringInProcess = false
