@@ -1,23 +1,50 @@
-import { initializeRenderer } from './renderer'
-import { initializeCamera } from './camera'
-import { initializeControls } from './controls'
-import { buildScene, initializeScene } from './scene'
-import { light } from './objects/light'
-import { walls } from './objects/walls'
-import { floor } from './objects/floor'
-import { ceil } from './objects/ceil'
-import { table } from './objects/table'
-import { coffeeMachine } from './objects/coffeeMachine'
-import { pourer } from './objects/pourer'
-import { coffeeGlass, getCoffeeGlassPoint } from './objects/coffeeGlass'
-import { getClipPlanePosition, getClipPosition, coffeeWater } from './objects/coffeeWater'
+import {initializeRenderer} from './renderer'
+import {initializeCamera} from './camera'
+import {initializeControls} from './controls'
+import {buildScene, initializeScene} from './scene'
+import {light} from './objects/light'
+import {walls} from './objects/walls'
+import {floor} from './objects/floor'
+import {ceil} from './objects/ceil'
+import {table} from './objects/table'
+import {coffeeMachine} from './objects/coffeeMachine'
+import {pourer} from './objects/pourer'
+import {coffeeGlass, getCoffeeGlassPoint} from './objects/coffeeGlass'
+import {getClipPlanePosition, getClipPosition, coffeeWater} from './objects/coffeeWater'
 import * as THREE from 'three'
-import { coffeeParticles } from './particles/coffeeParticles'
-import { barTable } from './objects/barTable'
-import { barLight } from './objects/directionLigth'
-import { window } from './objects/window'
-import { chair } from './objects/chair'
-import { fanFrame, loadFan } from './objects/fan'
+import {coffeeParticles} from './particles/coffeeParticles'
+import {barTable} from './objects/barTable'
+import {barLight} from './objects/directionLigth'
+import {window} from './objects/window'
+import {chair} from './objects/chair'
+import {fanFrame, loadFan} from './objects/fan'
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {dynamo} from "./dinamic";
+
+var Key = {
+  _pressed: {},
+
+  A: 65,
+  W: 87,
+  D: 68,
+  S: 83,
+  SPACE: 32,
+  Ctrl: 17,
+
+  isDown: function (keyCode: number) {
+    return this._pressed[keyCode];
+  },
+  onKeydown: function (event) {
+    this._pressed[event.keyCode] = true;
+  },
+  onKeyup: function (event) {
+    delete this._pressed[event.keyCode];
+  }
+}
+
+let camera: THREE.PerspectiveCamera
+let controls: OrbitControls
+let renderer: THREE.WebGLRenderer
 
 export const init = (canvas: HTMLCanvasElement): void => {
   const container = document.querySelector('#app') as HTMLDivElement
@@ -25,11 +52,11 @@ export const init = (canvas: HTMLCanvasElement): void => {
 
   console.log('INIT: Started')
 
-  const renderer = initializeRenderer(canvas)
+  renderer = initializeRenderer(canvas)
   renderer.setSize(container.clientWidth, container.clientHeight)
 
-  const camera = initializeCamera(20, 0, 70)
-  const controls = initializeControls(camera, canvas)
+  camera = initializeCamera(20, 0, 70)
+  controls = initializeControls(camera, canvas)
 
   const scene = initializeScene()
 
@@ -48,6 +75,8 @@ export const init = (canvas: HTMLCanvasElement): void => {
     topTable,
   } = barTable()
 
+  const glass = coffeeGlass()
+
   buildScene(scene, [
     light(-75, 100, 50),
     light(-75, -100, 50),
@@ -60,7 +89,7 @@ export const init = (canvas: HTMLCanvasElement): void => {
     coffeeMachine(),
     pourer(),
     water,
-    coffeeGlass(),
+    glass,
     barLight(10),
     window(),
     fanFrame(),
@@ -101,6 +130,15 @@ export const init = (canvas: HTMLCanvasElement): void => {
     }
   })
 
+  const onWindowResize = () => {
+    camera.aspect = innerWidth / innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(innerWidth, innerHeight - 50)
+    render()
+  }
+
+  addEventListener('resize', onWindowResize, false)
+
   const render = () => {
     // requestAnimationFrame(render)
 
@@ -115,19 +153,21 @@ export const init = (canvas: HTMLCanvasElement): void => {
       pouringPercent += 0.1 * delta
 
       animateParticles(delta)
+      if (glass.position.x > -1 && glass.position.x < 1) {
+        if (pouringPercent > 0.7) {
+          pouringPercent = 0.7
+          pouringInProcess = false
+          destructParticles()
+        }
 
-      if (pouringPercent > 0.7) {
-        pouringPercent = 0.7
-        pouringInProcess = false
-        destructParticles()
+        waterClipPlane.constant = getClipPlanePosition(pouringPercent)
+        const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.01 // radius
+        waterTopSide.scale.set(scale, scale, 1)
+        waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
       }
-
-      waterClipPlane.constant = getClipPlanePosition(pouringPercent)
-      const scale = getCoffeeGlassPoint(pouringPercent - 0.01).x - 0.01 // radius
-      waterTopSide.scale.set(scale, scale, 1)
-      waterTopSide.position.y = getClipPosition(pouringPercent) // world coffee water top position
     }
 
+    dynamo(Key, glass, water)
     controls.update()
     renderer.render(scene, camera)
   }
@@ -150,3 +190,18 @@ addEventListener('load', () => {
     init(canvas)
   }
 })
+
+addEventListener('keyup', function (event) {
+    Key.onKeyup(event)
+  },
+  false
+)
+
+addEventListener('keydown', function (event) {
+    Key.onKeydown(event)
+  },
+  false
+)
+
+
+

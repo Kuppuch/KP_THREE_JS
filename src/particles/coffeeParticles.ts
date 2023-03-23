@@ -135,7 +135,7 @@ export const coffeeParticles = (
       let y = positionsAttribute.getY(i)
       y += -12 * delta
 
-      if (y < -5) {
+      if (y < -7) {
         y = 3
       }
 

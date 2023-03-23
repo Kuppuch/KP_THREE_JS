@@ -18,7 +18,7 @@ export const getCoffeeGlassPoint = (
 export const coffeeGlass = (): THREE.Object3D => {
   const glass = new THREE.Object3D
 
-  const material = new THREE.MeshPhongMaterial({
+  const material_transparent = new THREE.MeshPhongMaterial({
     color: 0xEADAAF,
     specular: 0xEADAAF,
     shininess: 50,
@@ -30,6 +30,18 @@ export const coffeeGlass = (): THREE.Object3D => {
     opacity: 0.6
   })
 
+  const material = new THREE.MeshPhongMaterial({
+    color: 0xEADAAF,
+    specular: 0xEADAAF,
+    shininess: 50,
+    blending: THREE.NormalBlending,
+    depthTest: true,
+    depthWrite: true,
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 1
+  })
+
   const points = []
 
   for (let i = 0; i < 1; i += 0.01) {
@@ -39,7 +51,7 @@ export const coffeeGlass = (): THREE.Object3D => {
   }
 
   const geometry1 = new THREE.LatheGeometry(points, 32)
-  const object = new THREE.Mesh(geometry1, material)
+  const object = new THREE.Mesh(geometry1, material_transparent)
   object.position.set(0, 6.3, 0)
   glass.add(object)
 
