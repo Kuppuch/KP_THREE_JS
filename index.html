@@ -11,12 +11,18 @@
 
       #canvas {
         width: calc(100vw - 20px);
-        height: calc(100vh - 60px);
+        height: calc(100vh - 120px);
         display: block;
       }
 
       .controls {
         width: calc(100vw - 20px);
+        display: flex;
+      }
+      .controls div {
+        margin: 10px;
+        display: flex;
+        align-items: center;
       }
     </style>
   </head>
@@ -24,7 +30,22 @@
     <div id="app">
       <canvas id="canvas" width="1240" height="870"></canvas>
       <div class="controls">
-        <button id="pour">Налить кофе</button>
+        <div>
+          <button id="pour">Налить кофе</button>
+        </div>
+        <div class="move-choice">
+          <span>Управлять:</span>
+          <div>
+            <input type="radio" id="glass" name="move" value="glass"
+                   checked>
+            <label for="glass">Стаканом</label>
+          </div>
+
+          <div>
+            <input type="radio" id="camera" name="move" value="camera">
+            <label for="camera">Камерой</label>
+          </div>
+        </div>
       </div>
     </div>
     <script type="x-shader/x-vertex" id="shader-particle-vertex" src="/src/shaders/particleVertex.glsl"></script>

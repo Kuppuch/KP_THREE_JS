@@ -1,32 +1,90 @@
+import * as THREE from "three";
+
+let moveObject = 'glass'
+export let camTargetX: number = 0
+export let camTargetY: number = 0
+export let camTargetZ: number = 0
+
+export const moveItem = () => {
+  let moveChoice = document.querySelector('.move-choice')
+  let radios = []
+  radios.push(moveChoice.children[1].children[0])
+  radios.push(moveChoice.children[2].children[0])
+  for (let i = 0; i < radios.length; i++) {
+    radios[i].onclick = function () {
+      moveObject = radios[i].value
+    }
+  }
+}
+
 const step: number = 0.1
-export const dynamo = (Key: any, glass: THREE.Object3D, water: THREE.Object3D) => {
-  if (Key.isDown(Key.A) && checkCollision(glass, 'A')) // движение влево
+
+export const dynamo = (Key: any, glass: THREE.Object3D, water: THREE.Object3D, camera: THREE.PerspectiveCamera) => {
+
+  if (Key.isDown(Key.A)) // движение влево
   {
-    glass.position.x -= step
-    water.position.x -= step
+    if (moveObject === 'glass') {
+      if (checkCollision(glass, 'A')) {
+        glass.position.x -= step
+        water.position.x -= step
+      }
+    } else {
+      camera.position.x -= step*10
+      updateCameraTarget(camera, -step*10, 0, 0)
+    }
+
   }
-  if (Key.isDown(Key.D) && checkCollision(glass, 'D')) // движение вправо
+  if (Key.isDown(Key.D)) // движение вправо
   {
-    glass.position.x += step
-    water.position.x += step
+    if (moveObject === 'glass') {
+      if (checkCollision(glass, 'D')) {
+        glass.position.x += step
+        water.position.x += step
+      }
+    } else {
+      camera.position.x += step*10
+      updateCameraTarget(camera, step*10, 0, 0)
+    }
   }
-  if (Key.isDown(Key.W) && checkCollision(glass, 'W')) // движение вперёд
+  if (Key.isDown(Key.W)) // движение вперёд
   {
-    glass.position.z -= step
-    water.position.z -= step
+    if (moveObject === 'glass') {
+      if (checkCollision(glass, 'W')) {
+        glass.position.z -= step
+        water.position.z -= step
+      }
+    } else {
+      camera.position.z -= step*10
+      updateCameraTarget(camera, 0, 0, -step*10)
+    }
   }
-  if (Key.isDown(Key.S) && checkCollision(glass, 'S')) // движение назад
+  if (Key.isDown(Key.S)) // движение назад
   {
-    glass.position.z += step
-    water.position.z += step
+    if (moveObject === 'glass') {
+      if (checkCollision(glass, 'S')) {
+        glass.position.z += step
+        water.position.z += step
+      }
+    } else {
+      camera.position.z += step*10
+      updateCameraTarget(camera, 0, 0, step*10)
+    }
   }
   if (Key.isDown(Key.SPACE)) {
-    glass.position.y += step
-    water.position.y += step
+    if (moveObject === 'glass') {
+      glass.position.y += step
+      water.position.y += step
+    } else {
+      camera.position.y += step*10
+    }
   }
   if (Key.isDown(Key.Ctrl)) {
-    glass.position.y -= step
-    glass.position.y -= step
+    if (moveObject === 'glass') {
+      glass.position.y -= step
+      glass.position.y -= step
+    } else {
+      camera.position.y -= step*10
+    }
   }
 }
 
@@ -56,4 +114,12 @@ export const checkCollision = (glass: THREE.Object3D, direction: string): boolea
       break
   }
   return false
+}
+
+export const updateCameraTarget = (camera: THREE.PerspectiveCamera, x: number, y: number, z: number) => {
+  camTargetX += x
+  camTargetY += y
+  camTargetZ += z
+  camera.lookAt(camTargetX, camTargetY, camTargetZ)
+  console.log(camTargetX, camTargetY, camTargetZ)
 }

@@ -19,7 +19,7 @@ import {window} from './objects/window'
 import {chair} from './objects/chair'
 import {fanFrame, loadFan} from './objects/fan'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-import {dynamo} from "./dinamic";
+import {camTargetX, camTargetY, camTargetZ, dynamo, moveItem} from "./dinamic";
 
 var Key = {
   _pressed: {},
@@ -49,6 +49,8 @@ let renderer: THREE.WebGLRenderer
 export const init = (canvas: HTMLCanvasElement): void => {
   const container = document.querySelector('#app') as HTMLDivElement
   const pourButton = document.querySelector('#pour') as HTMLButtonElement
+
+  moveItem()
 
   console.log('INIT: Started')
 
@@ -133,7 +135,7 @@ export const init = (canvas: HTMLCanvasElement): void => {
   const onWindowResize = () => {
     camera.aspect = innerWidth / innerHeight
     camera.updateProjectionMatrix()
-    renderer.setSize(innerWidth, innerHeight - 50)
+    renderer.setSize(innerWidth, innerHeight - 60)
     render()
   }
 
@@ -167,8 +169,10 @@ export const init = (canvas: HTMLCanvasElement): void => {
       }
     }
 
-    dynamo(Key, glass, water)
+
     controls.update()
+    dynamo(Key, glass, water, camera)
+    camera.lookAt(camTargetX, camTargetY, camTargetZ)
     renderer.render(scene, camera)
   }
 
