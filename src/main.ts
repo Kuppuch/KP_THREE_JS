@@ -20,6 +20,7 @@ import {chair} from './objects/chair'
 import {fanFrame, loadFan} from './objects/fan'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {camTargetX, camTargetY, camTargetZ, dynamo, moveItem} from "./dinamic";
+import { spritef } from './objects/sprite'
 
 var Key = {
   _pressed: {},
@@ -73,6 +74,12 @@ export const init = (canvas: HTMLCanvasElement): void => {
   } = coffeeWater(0)
 
   const {
+    runner: sprite,
+    runner2: sprite2,
+    annie,
+  } = spritef()
+
+  const {
     table: barTableMesh,
     topTable,
   } = barTable()
@@ -93,8 +100,10 @@ export const init = (canvas: HTMLCanvasElement): void => {
     water,
     glass,
     barLight(10),
-    window(),
+    //window(),
     fanFrame(),
+    sprite,
+    sprite2,
   ])
 
   let fan: THREE.Group
@@ -145,6 +154,7 @@ export const init = (canvas: HTMLCanvasElement): void => {
     // requestAnimationFrame(render)
 
     const delta = clock.getDelta()
+    annie.update(1000 * delta);
 
     if (fan) {
       fan.rotateX(50)
